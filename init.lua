@@ -405,7 +405,8 @@ vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
 vim.o.updatetime = 250
-vim.o.timeoutlen = 300
+vim.o.timeoutlen = 50-- JA was 300, used to remove input delay with space in insert mode
+vim.o.ttimeoutlen = 50-- JA in case there is a keycode delay
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -748,7 +749,7 @@ cmp.setup {
         fallback()
       end
     end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
+    ['<C-Tab>'] = cmp.mapping(function(fallback)-- JA: changed from S-Tab
       if cmp.visible() then
         cmp.select_prev_item()
       elseif luasnip.locally_jumpable(-1) then
@@ -776,3 +777,4 @@ vim.keymap.set({'n', 'v' }, '<C-D>', '<C-D>zz', {silent=true, desc ="center scre
 vim.keymap.set({'n', 'v' }, '<C-U>', '<C-U>zz', {silent=true, desc ="center screen when move by half-page"})
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
