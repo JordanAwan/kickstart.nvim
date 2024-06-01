@@ -283,8 +283,8 @@ require('lazy').setup({
   --  JA: install vimtex
   {
     'lervag/vimtex',
+    'micangl/cmp-vimtex',
     -- below copied from vimtex:
-
 -- JA: vimtex setup
   vim.cmd([[
     " This is necessary for VimTeX to load properly. The "indent" is optional.
@@ -311,6 +311,11 @@ let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
 " see ":help vimtex-compiler".
 let g:vimtex_compiler_method = 'latexmk'"'latexrun'"'latexmk'
 ]])
+--require('cmp').setup({
+--  sources = {
+--    { name = 'vimtex', },
+--  },
+--})
 
 
   }
@@ -751,6 +756,7 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },
+  { name = 'vimtex'},
   },
 }
 
