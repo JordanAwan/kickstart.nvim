@@ -318,7 +318,7 @@ let g:vimtex_compiler_method = 'latexmk'"'latexrun'"'latexmk'
 --})
 
 
-  }
+  },
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
   --    up-to-date with whatever is in the kickstart repo.
@@ -327,22 +327,28 @@ let g:vimtex_compiler_method = 'latexmk'"'latexrun'"'latexmk'
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   -- { import = 'custom.plugins' },
 --},
--- JA: deoplete for autocompletion
---  {
---    'Shougo/deoplete.nvim',
----- JA: deoplete setup
---vim.cmd([[
---let g:deoplete#enable_at_startup = 1
---]]),
---  init = function()
---    vim.g["deoplete#enable_at_startup"] = 1
---  end,
---  config = function()
---    vim.fn["deoplete#custom#var"]("omni", "input_patterns", {
---      tex = vim.g["vimtex#re#deoplete"]
---    })
---  end,
---    }
+  {
+    -- JA: R.nvim gives support for R in neovim.
+    "R-nvim/R.nvim",
+    lazy = false
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    run = ":TSUpdate",
+    config = function ()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = { "markdown", "markdown_inline", "r", "rnoweb" },
+      })
+    end
+  },
+  "R-nvim/cmp-r",
+  {
+    "hrsh7th/nvim-cmp",
+    config = function()
+      require("cmp").setup({ sources = {{ name = "cmp_r" }}})
+      require("cmp_r").setup({ })
+    end,
+  },
   })
 
 
