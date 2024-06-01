@@ -198,6 +198,7 @@ require('lazy').setup({
     config = function()
       vim.cmd.colorscheme 'catppuccin'
     end,
+
   },
 
   {
@@ -261,20 +262,30 @@ require('lazy').setup({
   --       Uncomment any of the lines below to enable them.
   -- require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
+
+  -- JA: Added for a pdf converter/viewer for markdown.
+{
+    'arminveres/md-pdf.nvim',
+    branch = 'main', -- you can assume that main is somewhat stable until releases will be made
+    -- branch = "fix/echo-loop", -- JA: added to fix an error 
+    lazy = true,
+    keys = {
+        {
+            "<leader>,",
+            function()
+                require("md-pdf").convert_md_to_pdf()
+            end,
+            desc = "Markdown preview",
+        },
+    },
+    opts = {},
+},
   --  JA: install vimtex
   {
-    'lervag/vimtex'
+    'lervag/vimtex',
     -- below copied from vimtex:
-  },
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
-  --    up-to-date with whatever is in the kickstart repo.
-  --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  --
-  --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
-}, {})
 
+-- JA: vimtex setup
   vim.cmd([[
     " This is necessary for VimTeX to load properly. The "indent" is optional.
 " Note that most plugin managers will do this automatically.
@@ -287,10 +298,10 @@ syntax enable
 
 " Viewer options: One may configure the viewer either by specifying a built-in
 " viewer method:
-let g:vimtex_view_method = 'skim'
+let g:vimtex_view_method = 'zathura'"'skim'
 
 " Or with a generic interface:
-let g:vimtex_view_general_viewer = 'okular'
+" let g:vimtex_view_general_viewer ='okular'
 let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
 
 " VimTeX uses latexmk as the default compiler backend. If you use it, which is
@@ -298,10 +309,55 @@ let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
 " want another compiler backend, you can change it as follows. The list of
 " supported backends and further explanation is provided in the documentation,
 " see ":help vimtex-compiler".
-let g:vimtex_compiler_method = 'latexmk'
+let g:vimtex_compiler_method = 'latexmk'"'latexrun'"'latexmk'
 ]])
 
 
+  }
+  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
+  --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
+  --    up-to-date with whatever is in the kickstart repo.
+  --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
+  --
+  --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
+  -- { import = 'custom.plugins' },
+--},
+-- JA: deoplete for autocompletion
+--  {
+--    'Shougo/deoplete.nvim',
+---- JA: deoplete setup
+--vim.cmd([[
+--let g:deoplete#enable_at_startup = 1
+--]]),
+--  init = function()
+--    vim.g["deoplete#enable_at_startup"] = 1
+--  end,
+--  config = function()
+--    vim.fn["deoplete#custom#var"]("omni", "input_patterns", {
+--      tex = vim.g["vimtex#re#deoplete"]
+--    })
+--  end,
+--    }
+  })
+
+
+  --JA configuration for markdown preview
+--require('md-pdf').setup() -- default options, or
+require('md-pdf').setup({
+  --- Set margins around document
+  margins = "1.5cm",
+  --- tango, pygments are quite nice for white on white
+  highlight = "tango",
+  --- Generate a table of contents, on by default
+  toc = false, --- true,
+  --- Define a custom preview command, enabling hooks and other custom logic
+  preview_cmd = function() return 'zathura' end
+})
+
+-- setup mapping
+vim.keymap.set("n", "<Space>,", function()
+    require('md-pdf').convert_md_to_pdf()
+end)
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -698,5 +754,12 @@ cmp.setup {
   },
 }
 
+-- add CTRL-BACKSPACE to normal, visual, and insert mode.
+vim.keymap.set({ 'n', 'v' }, '<C-BS>', 'db', { silent = true, desc = "deletes the word that the cursor is on" })
+
+vim.keymap.set({ 'i' }, '<C-BS>', '<C-W>', { silent = true, desc = "deletes the previous word in insert mode" })
+-- center the screen when moving by half-pages
+vim.keymap.set({'n', 'v' }, '<C-D>', '<C-D>zz', {silent=true, desc ="center screen when move by half-page"})
+vim.keymap.set({'n', 'v' }, '<C-U>', '<C-U>zz', {silent=true, desc ="center screen when move by half-page"})
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
