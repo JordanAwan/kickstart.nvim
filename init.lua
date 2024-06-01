@@ -763,6 +763,7 @@ cmp.setup {
     { name = 'luasnip' },
     { name = 'path' },
   { name = 'vimtex'},
+  {name = "cmp_r"},
   },
 }
 
