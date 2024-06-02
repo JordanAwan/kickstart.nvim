@@ -349,6 +349,7 @@ let g:vimtex_compiler_method = 'latexmk'"'latexrun'"'latexmk'
       require("cmp_r").setup({ })
     end,
   },
+"kshenoy/vim-signature"
   })
 
 
